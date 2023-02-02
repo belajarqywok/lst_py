@@ -1,0 +1,34 @@
+frameworkVersion: '3'
+service: localstack-py
+
+plugins:
+  - serverless-wsgi
+  - serverless-localstack
+  - serverless-python-requirements
+
+custom:
+  wsgi:
+    app: app.config
+    packRequirements: false
+
+  pythonRequirements:
+    dockerizePip: true
+
+  localstack:
+    debug: true
+    stages:
+     - local
+     - dev
+    endpointFile: localstack_endpoints.json                                                   
+ 
+provider:
+  name: aws
+  runtime: python3.9
+  stage: dev
+  region: ap-southeast-3 # ( jakarta )
+
+functions:
+  app:
+    handler: wsgi.handler
+    events:
+      - http: ANY /
